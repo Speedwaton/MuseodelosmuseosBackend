@@ -1,0 +1,12 @@
+# Compilados de Maven
+target/
+# IntelliJ IDEA
+.idea/
+*.iml
+out/
+# Llaves y archivos firmados: no se suben
+*.jks
+*.keystore
+*.apk
+*.aab
+.env
