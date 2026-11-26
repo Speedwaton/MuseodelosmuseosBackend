@@ -1,5 +1,7 @@
 package cl.triskeledu.museo.museos.controlador;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import cl.triskeledu.museo.museos.dto.Dtos.MuseoRequest;
 import cl.triskeledu.museo.museos.dto.Dtos.RevisionRequest;
 import cl.triskeledu.museo.museos.modelo.Museo;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 // Endpoints REST de museos: http://localhost:8082/api/museos
+@Tag(name = "Museos", description = "Fichas de museos, filtros del mapa, revisión y búsqueda por QR")
 @RestController
 @RequestMapping("/api/museos")
 public class MuseoController {
@@ -31,6 +34,7 @@ public class MuseoController {
     }
 
     // GET /api/museos?soloPublicados=true&pais=Chile&proyecto=... -> lista para el mapa.
+    @Operation(summary = "Listar museos (filtros opcionales: soloPublicados, pais, proyecto)")
     @GetMapping
     public List<Museo> listar(@RequestParam(defaultValue = "false") boolean soloPublicados,
                               @RequestParam(required = false) String pais,
@@ -39,18 +43,21 @@ public class MuseoController {
     }
 
     // GET /api/museos/{id} -> 200 o 404.
+    @Operation(summary = "Obtener una ficha por su id")
     @GetMapping("/{id}")
     public Museo obtener(@PathVariable Long id) {
         return servicio.obtener(id);
     }
 
     // GET /api/museos/codigo/{codigo} -> la ficha que corresponde a un QR, o 404.
+    @Operation(summary = "Buscar la ficha de un código QR")
     @GetMapping("/codigo/{codigo}")
     public Museo porCodigo(@PathVariable String codigo) {
         return servicio.porCodigo(codigo);
     }
 
     // POST /api/museos -> 201 con la ficha nueva, 409 si el código QR ya existe.
+    @Operation(summary = "Crear una ficha (publicada si la crea el Administrador, en revisión si la crea el Investigador)")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Museo crear(@Valid @RequestBody MuseoRequest datos) {
@@ -58,18 +65,21 @@ public class MuseoController {
     }
 
     // PUT /api/museos/{id} -> corrige la ficha.
+    @Operation(summary = "Corregir una ficha")
     @PutMapping("/{id}")
     public Museo actualizar(@PathVariable Long id, @Valid @RequestBody MuseoRequest datos) {
         return servicio.actualizar(id, datos);
     }
 
     // PATCH /api/museos/{id}/revision -> el Administrador publica u observa.
+    @Operation(summary = "Publicar u observar una ficha (Administrador)")
     @PatchMapping("/{id}/revision")
     public Museo revisar(@PathVariable Long id, @Valid @RequestBody RevisionRequest datos) {
         return servicio.revisar(id, datos);
     }
 
     // DELETE /api/museos/{id} -> 204 sin contenido.
+    @Operation(summary = "Eliminar una ficha")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminar(@PathVariable Long id) {

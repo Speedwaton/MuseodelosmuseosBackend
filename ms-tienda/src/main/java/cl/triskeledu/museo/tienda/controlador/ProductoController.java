@@ -1,5 +1,7 @@
 package cl.triskeledu.museo.tienda.controlador;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import cl.triskeledu.museo.tienda.dto.Dtos.ActivoRequest;
 import cl.triskeledu.museo.tienda.dto.Dtos.ProductoRequest;
 import cl.triskeledu.museo.tienda.modelo.Producto;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 // Endpoints REST del catálogo: http://localhost:8083/api/productos
+@Tag(name = "Productos", description = "Catálogo de cursos, publicaciones y artículos")
 @RestController
 @RequestMapping("/api/productos")
 public class ProductoController {
@@ -30,24 +33,28 @@ public class ProductoController {
     }
 
     // GET /api/productos?soloActivos=true -> catálogo.
+    @Operation(summary = "Listar el catálogo (soloActivos=true para el Cliente)")
     @GetMapping
     public List<Producto> listar(@RequestParam(defaultValue = "false") boolean soloActivos) {
         return servicio.listar(soloActivos);
     }
 
     // GET /api/productos/{id} -> 200 o 404.
+    @Operation(summary = "Obtener un producto por su id")
     @GetMapping("/{id}")
     public Producto obtener(@PathVariable Long id) {
         return servicio.obtener(id);
     }
 
     // GET /api/productos/codigo/{codigo} -> el producto de un QR, o 404.
+    @Operation(summary = "Buscar el producto de un código QR")
     @GetMapping("/codigo/{codigo}")
     public Producto porCodigo(@PathVariable String codigo) {
         return servicio.porCodigo(codigo);
     }
 
     // POST /api/productos -> 201 con el producto nuevo.
+    @Operation(summary = "Crear un producto")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Producto crear(@Valid @RequestBody ProductoRequest datos) {
@@ -55,12 +62,14 @@ public class ProductoController {
     }
 
     // PUT /api/productos/{id} -> edita el producto.
+    @Operation(summary = "Editar un producto")
     @PutMapping("/{id}")
     public Producto actualizar(@PathVariable Long id, @Valid @RequestBody ProductoRequest datos) {
         return servicio.actualizar(id, datos);
     }
 
     // PATCH /api/productos/{id}/activo -> lo activa o desactiva.
+    @Operation(summary = "Activar o desactivar un producto")
     @PatchMapping("/{id}/activo")
     public Producto cambiarActivo(@PathVariable Long id, @RequestBody ActivoRequest datos) {
         return servicio.cambiarActivo(id, datos.activo());
