@@ -22,6 +22,7 @@ antes de registrar una compra, y guarda su nombre en la solicitud.
 | MySQL | 8.4 (Laragon), conector `mysql-connector-j` |
 | Maven | Wrapper incluido (`mvnw.cmd`) |
 | Pruebas | JUnit 5, Mockito, AssertJ, MockMvc (`spring-boot-starter-test`) |
+| Documentación de la API | Swagger (springdoc-openapi 2.8.9) |
 
 ## Estructura de cada microservicio
 
@@ -63,6 +64,22 @@ mvnw.cmd -pl ms-tienda spring-boot:run
 > a crear las tablas, **cada reinicio deja los datos de demostración originales**.
 
 También se pueden abrir en IntelliJ IDEA (abrir `pom.xml` como proyecto) y ejecutar cada `*Application`.
+
+## Swagger: probar los endpoints desde el navegador
+
+Cada microservicio publica su documentación con Swagger. Ahí se ven todos sus endpoints, agrupados y descritos
+en español, y se pueden probar con **Try it out** → completar el JSON → **Execute**.
+
+| Microservicio | Swagger |
+|---|---|
+| ms-usuarios | <http://localhost:8081/swagger-ui.html> |
+| ms-museos | <http://localhost:8082/swagger-ui.html> |
+| ms-tienda | <http://localhost:8083/swagger-ui.html> |
+
+La especificación en JSON (OpenAPI) está en `/v3/api-docs` de cada servicio. Las descripciones salen de las
+anotaciones `@Tag` (controlador), `@Operation` (endpoint) y `@OpenAPIDefinition` (clase principal).
+
+> Swagger sirve para probar la API **a mano**. Las pruebas **automáticas** son las pruebas unitarias de abajo.
 
 ## Pruebas unitarias
 
