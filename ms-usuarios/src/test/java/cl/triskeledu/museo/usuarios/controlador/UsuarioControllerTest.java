@@ -64,8 +64,9 @@ class UsuarioControllerTest {
 
     @Test
     void registro_conClaveCorta_responde400_sinLlamarAlServicio() throws Exception {
+        // "abc1" tiene letras y números: solo falla el largo mínimo, así el mensaje esperado es siempre el mismo.
         mvc.perform(post("/api/usuarios/registro").contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"nombre\":\"Ana\",\"correo\":\"ana@museo.demo\",\"clave\":\"corta\"}"))
+                        .content("{\"nombre\":\"Ana\",\"correo\":\"ana@museo.demo\",\"clave\":\"abc1\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("La contraseña debe tener al menos 8 caracteres"));
         verify(servicio, never()).registrar(any());
